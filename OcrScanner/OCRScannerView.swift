@@ -27,7 +27,7 @@ public class OCRScannerView: UIView {
         return videoDataOutput
     }()
 
-    private let videoDataOutputQueue: DispatchQueue = DispatchQueue(label: "JKVideoDataOutputQueue")
+    private let videoDataOutputQueue: DispatchQueue = DispatchQueue(label: "DataOutputQueue")
     private lazy var previewLayer: AVCaptureVideoPreviewLayer = {
         let layer = AVCaptureVideoPreviewLayer(session: session)
         layer.videoGravity = .resizeAspectFill
@@ -39,9 +39,12 @@ public class OCRScannerView: UIView {
     private let captureDevice: AVCaptureDevice? = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
     private lazy var session: AVCaptureSession = {
         let session = AVCaptureSession()
-        session.sessionPreset = .vga640x480
+        session.sessionPreset = .hd1280x720
         return session
     }()
+
+    private var timer: Timer?
+    private var allowFrameCapture = true
 
     enum OCRType {
         case reference
@@ -75,6 +78,10 @@ public class OCRScannerView: UIView {
         previewLayer.frame = bounds
     }
 
+    deinit {
+        endSession()
+    }
+
     // MARK: - Public
 
     public func beginSession() {
@@ -90,16 +97,24 @@ public class OCRScannerView: UIView {
             if session.canAddOutput(videoDataOutput) {
                 session.addOutput(videoDataOutput)
             }
+
             layer.masksToBounds = true
             previewLayer.frame = bounds
             layer.addSublayer(previewLayer)
+
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] _ in
+                self?.allowFrameCapture = true
+            })
+
             session.startRunning()
+
         } catch let error {
             debugPrint("\(self.self): \(#function) line: \(#line).  \(error.localizedDescription)")
         }
     }
 
     public func endSession() {
+        timer?.invalidate()
         session.stopRunning()
     }
 
@@ -113,16 +128,18 @@ public class OCRScannerView: UIView {
             }
             for block in text.blocks {
                 print(block.text)
-
                 let result = self.checkStringForOCR(string: block.text)
-                if result.0 == .giroNr {
-                    self.delegate?.didRecognizeGiroNumber(result.1)
-                } else if result.0 == .reference && result.2 == true {
-                    self.delegate?.didRecognizeOcrNumber(result.1)
-                } else if result.0 == .amount {
-                    self.delegate?.didRecognizeAmount(result.1)
-                } else if result.0 == .undefined {
-                    //print("type: \(result.0), text: \(result.1), bool: \(result.2)")
+
+                DispatchQueue.main.async {
+                    if result.0 == .giroNr {
+                        self.delegate?.didRecognizeGiroNumber(result.1)
+                    } else if result.0 == .reference && result.2 == true {
+                        self.delegate?.didRecognizeOcrNumber(result.1)
+                    } else if result.0 == .amount {
+                        self.delegate?.didRecognizeAmount(result.1)
+                    } else if result.0 == .undefined {
+                        //print("type: \(result.0), text: \(result.1), bool: \(result.2)")
+                    }
                 }
             }
         }
@@ -199,12 +216,12 @@ public class OCRScannerView: UIView {
 
 extension OCRScannerView: AVCaptureVideoDataOutputSampleBufferDelegate {
 
-    public func captureOutput(
-        _ output: AVCaptureOutput,
-        didOutput sampleBuffer: CMSampleBuffer,
-        from connection: AVCaptureConnection
-        ) {
-        guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+
+    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+
+        guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer), allowFrameCapture else { return }
+        allowFrameCapture = false
+        print(Date())
         let visionImage = VisionImage(buffer: sampleBuffer)
         let metadata = VisionImageMetadata()
         let visionOrientation = VisionDetectorImageOrientation.rightTop
