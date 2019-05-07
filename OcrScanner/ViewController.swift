@@ -31,6 +31,12 @@ class ViewController: UIViewController {
         super.viewDidDisappear(animated)
         ocrScannerView.endSession()
     }
+
+    @IBAction func didTapReset(_ sender: Any) {
+        ocrLabel.text = "0"
+        sumLbl.text = "0"
+        giroLbl.text = "0"
+    }
 }
 
 extension ViewController: OCRScannerViewDelegate {

@@ -13,14 +13,17 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="OcrScannerExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="OcrScanner" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DVG-Zs-veN" customClass="OCRScannerView" customModule="OcrScannerExample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DVG-Zs-veN" customClass="OCRScannerView" customModule="OcrScanner" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="408" width="414" height="80"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="fe9-0W-3e1"/>
+                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VBG-oh-TrV">
                                 <rect key="frame" x="59.5" y="782" width="295" height="50"/>
@@ -81,15 +84,27 @@
                                     <constraint firstItem="ibM-oN-SuP" firstAttribute="leading" secondItem="VBG-oh-TrV" secondAttribute="leading" id="Nqg-hN-nvT"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I1S-ff-S8z">
+                                <rect key="frame" x="163" y="733" width="88" height="41"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="41" id="8Ke-GK-k7n"/>
+                                    <constraint firstAttribute="width" constant="88" id="Ita-i2-N6n"/>
+                                </constraints>
+                                <state key="normal" title="Reset"/>
+                                <connections>
+                                    <action selector="didTapReset:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4jO-bU-3p1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="VBG-oh-TrV" firstAttribute="top" secondItem="I1S-ff-S8z" secondAttribute="bottom" constant="8" id="59f-R8-peM"/>
+                            <constraint firstItem="DVG-Zs-veN" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="AeW-6e-GCg"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="VBG-oh-TrV" secondAttribute="bottom" constant="30" id="BXG-4n-zUc"/>
                             <constraint firstItem="VBG-oh-TrV" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="SFG-Fc-Tyv"/>
                             <constraint firstItem="DVG-Zs-veN" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="SL1-UB-7Yi"/>
-                            <constraint firstAttribute="bottom" secondItem="DVG-Zs-veN" secondAttribute="bottom" id="aPC-T4-NJw"/>
                             <constraint firstItem="DVG-Zs-veN" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="bdV-0s-r7X"/>
-                            <constraint firstItem="DVG-Zs-veN" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="rpe-MQ-Xlq"/>
+                            <constraint firstItem="I1S-ff-S8z" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ck5-bq-P33"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

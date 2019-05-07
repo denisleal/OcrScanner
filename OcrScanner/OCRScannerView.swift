@@ -127,15 +127,24 @@ public class OCRScannerView: UIView {
                 return
             }
             for block in text.blocks {
-                print(block.text)
+//                print(block.text)
                 let result = self.checkStringForOCR(string: block.text)
 
                 DispatchQueue.main.async {
                     if result.0 == .giroNr {
+                        print("\n============================")
+                        print("Found Giro Number: \(result.1)")
+                        print("============================\n")
                         self.delegate?.didRecognizeGiroNumber(result.1)
                     } else if result.0 == .reference && result.2 == true {
+                        print("\n============================")
+                        print("Found OCR Number: \(result.1)")
+                        print("============================\n")
                         self.delegate?.didRecognizeOcrNumber(result.1)
                     } else if result.0 == .amount {
+                        print("\n============================")
+                        print("Found Amount: \(result.1)")
+                        print("============================\n")
                         self.delegate?.didRecognizeAmount(result.1)
                     } else if result.0 == .undefined {
                         //print("type: \(result.0), text: \(result.1), bool: \(result.2)")
@@ -216,19 +225,47 @@ public class OCRScannerView: UIView {
 
 extension OCRScannerView: AVCaptureVideoDataOutputSampleBufferDelegate {
 
-
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-
         guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer), allowFrameCapture else { return }
         allowFrameCapture = false
-        print(Date())
-        let visionImage = VisionImage(buffer: sampleBuffer)
-        let metadata = VisionImageMetadata()
-        let visionOrientation = VisionDetectorImageOrientation.rightTop
-        metadata.orientation = visionOrientation
-        visionImage.metadata = metadata
-        let imageWidth = CGFloat(CVPixelBufferGetWidth(imageBuffer))
-        let imageHeight = CGFloat(CVPixelBufferGetHeight(imageBuffer))
-        self.recognizeTextOnDevice(in: visionImage, width: imageWidth, height: imageHeight)
+        let fullImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer)
+        if let image = cropToPreviewLayer(originalImage: fullImage) {
+            let visionImage = VisionImage(image: image)
+            let metadata = VisionImageMetadata()
+            metadata.orientation = .rightTop
+            visionImage.metadata = metadata
+            let imageWidth = CGFloat(CVPixelBufferGetWidth(imageBuffer))
+            let imageHeight = CGFloat(CVPixelBufferGetHeight(imageBuffer))
+            self.recognizeTextOnDevice(in: visionImage, width: imageWidth, height: imageHeight)
+        }
+    }
+
+    private func imageFromSampleBuffer(sampleBuffer : CMSampleBuffer) -> UIImage {
+        let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+        let ciimage = CIImage(cvPixelBuffer: imageBuffer)
+        let image = convert(ciImage: ciimage)
+        return image
+    }
+
+    private func convert(ciImage: CIImage) -> UIImage {
+        let context = CIContext(options: nil)
+        let cgImage = context.createCGImage(ciImage, from: ciImage.extent)!
+        let image = UIImage(cgImage: cgImage)
+        return image
+    }
+
+    private func cropToPreviewLayer(originalImage: UIImage) -> UIImage? {
+        guard let cgImage = originalImage.cgImage else { return nil }
+        let outputRect = previewLayer.metadataOutputRectConverted(fromLayerRect: previewLayer.bounds)
+        let width = CGFloat(cgImage.width)
+        let height = CGFloat(cgImage.height)
+        let cropRect = CGRect(x: outputRect.origin.x * width,
+                              y: outputRect.origin.y * height,
+                              width: outputRect.size.width * width,
+                              height: outputRect.size.height * height)
+        if let croppedCGImage = cgImage.cropping(to: cropRect) {
+            return UIImage(cgImage: croppedCGImage, scale: originalImage.scale, orientation: originalImage.imageOrientation)
+        }
+        return nil
     }
 }
