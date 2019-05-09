@@ -13,7 +13,7 @@ import FirebaseMLVision
 public protocol OCRScannerViewDelegate: class {
     func didRecognizeOcrNumber(_ ocrNumber: String)
     func didRecognizeGiroNumber(_ giroNumber: String)
-    func didRecognizeAmount(_ amount: String)
+    func didRecognizeAmount(_ amount: Double)
 }
 
 public class OCRScannerView: UIView {
@@ -52,6 +52,8 @@ public class OCRScannerView: UIView {
         case giroNr
         case undefined
     }
+
+    typealias OCRResult = (type: OCRType, value: String, amount: Double, isValid: Bool)
 
     // MARK: - Init
 
@@ -131,23 +133,28 @@ public class OCRScannerView: UIView {
                 let result = self.checkStringForOCR(string: block.text)
 
                 DispatchQueue.main.async {
-                    if result.0 == .giroNr {
+                    switch result.type {
+                    case .reference where result.isValid:
                         print("\n============================")
-                        print("Found Giro Number: \(result.1)")
+                        print("Found OCR Number: \(result.value)")
                         print("============================\n")
-                        self.delegate?.didRecognizeGiroNumber(result.1)
-                    } else if result.0 == .reference && result.2 == true {
+                        self.delegate?.didRecognizeOcrNumber(result.value)
+
+                    case .amount:
                         print("\n============================")
-                        print("Found OCR Number: \(result.1)")
+                        print("Found Amount: \(result.amount)")
                         print("============================\n")
-                        self.delegate?.didRecognizeOcrNumber(result.1)
-                    } else if result.0 == .amount {
+                        self.delegate?.didRecognizeAmount(result.amount)
+
+                    case .giroNr:
                         print("\n============================")
-                        print("Found Amount: \(result.1)")
+                        print("Found Giro Number: \(result.value)")
                         print("============================\n")
-                        self.delegate?.didRecognizeAmount(result.1)
-                    } else if result.0 == .undefined {
-                        //print("type: \(result.0), text: \(result.1), bool: \(result.2)")
+                        self.delegate?.didRecognizeGiroNumber(result.value)
+
+                    default:
+                        //print(result)
+                        break
                     }
                 }
             }
@@ -155,7 +162,7 @@ public class OCRScannerView: UIView {
     }
 
     //swiftlint:disable large_tuple
-    private func checkStringForOCR(string: String) -> (OCRType, String, Bool) {
+    private func checkStringForOCR(string: String) -> OCRResult {
         let giroPattern = "[0-9]{2,8}#[0-9]{2}#"
         let amountPattern = "[0-9]{0,7}\\s[0-9]{2}"
         let ocrNrPattern = "[0-9]{3,25}\\s#"
@@ -165,14 +172,32 @@ public class OCRScannerView: UIView {
         let predicateOCRNr = NSPredicate(format: "SELF MATCHES %@", ocrNrPattern)
 
         if predicateOCRNr.evaluate(with: string) {
-            return (.reference, string, checkValidOCRNr(string: string, controlLength: false))
+            return OCRResult(type: .reference, value: formatOCRNumber(string), amount: 0, isValid: checkValidOCRNr(string: string, controlLength: false))
         } else if predicateAmount.evaluate(with: string) {
-            return (.amount, string, false)
+            return OCRResult(type: .amount, value: string, amount: formatAmount(string), isValid: true)
         } else if predicateGiro.evaluate(with: string) {
-            return (.giroNr, string, false)
+            return OCRResult(type: .giroNr, value: formatGiroNumber(string), amount: 0, isValid: true)
         } else {
-            return (.undefined, string, false)
+            return OCRResult(type: .undefined, value: string, amount: 0, isValid: true)
         }
+    }
+
+    private func formatOCRNumber(_ ocrText: String) -> String {
+        guard let formatted = ocrText.split(separator: "#").first else { return ocrText }
+        return String(formatted).trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func formatAmount(_ amountText: String) -> Double {
+        let amountText = amountText.replacingOccurrences(of: " ", with: ",")
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.decimalSeparator = ","
+        return formatter.number(from: amountText)?.doubleValue ?? 0
+    }
+
+    private func formatGiroNumber(_ giroText: String) -> String {
+        guard let formatted = giroText.split(separator: "#").first else { return giroText }
+        return String(formatted)
     }
 
     /// This function calculates if a OCR-number is valid according to 10 modulus.

@@ -48,7 +48,7 @@ extension ViewController: OCRScannerViewDelegate {
         self.giroLbl.text = giroNumber
     }
 
-    func didRecognizeAmount(_ amount: String) {
-        self.sumLbl.text = amount
+    func didRecognizeAmount(_ amount: Double) {
+        self.sumLbl.text = amount.description
     }
 }
