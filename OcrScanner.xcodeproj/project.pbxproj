@@ -42,15 +42,80 @@
 		463BC35A2281CACB007D274F /* Protobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC3492281CACA007D274F /* Protobuf.framework */; };
 		463BC35B2281CACB007D274F /* FirebaseAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC34A2281CACA007D274F /* FirebaseAnalytics.framework */; };
 		463BC35C2281CACB007D274F /* TextDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC34B2281CACA007D274F /* TextDetector.framework */; };
+		463BC41522845374007D274F /* SwiftOCR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC3FC22845308007D274F /* SwiftOCR.framework */; };
+		463BC41622845374007D274F /* SwiftOCR.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC3FC22845308007D274F /* SwiftOCR.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		463BC41A2284537A007D274F /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC40C22845327007D274F /* GPUImage.framework */; };
+		463BC41B2284537A007D274F /* GPUImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC40C22845327007D274F /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		463BC3FB22845308007D274F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 463BC3F222845307007D274F /* SwiftOCR.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 373ED0AF1CC9071C00C4758B;
+			remoteInfo = SwiftOCR;
+		};
+		463BC3FD22845308007D274F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 463BC3F222845307007D274F /* SwiftOCR.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 373ED0B91CC9071D00C4758B;
+			remoteInfo = SwiftOCRTests;
+		};
+		463BC3FF22845308007D274F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 463BC3F222845307007D274F /* SwiftOCR.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 373ED0E61CC909A500C4758B;
+			remoteInfo = "SwiftOCR Mac";
+		};
+		463BC40122845308007D274F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 463BC3F222845307007D274F /* SwiftOCR.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 373ED0EF1CC909A500C4758B;
+			remoteInfo = "SwiftOCR MacTests";
+		};
+		463BC40922845327007D274F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 463BC40322845327007D274F /* GPUImage.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BCF1A33414DDB1EC00852800;
+			remoteInfo = GPUImage;
+		};
+		463BC40B22845327007D274F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 463BC40322845327007D274F /* GPUImage.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BCE209E51943F20C002FEED8;
+			remoteInfo = GPUImageFramework;
+		};
+		463BC41722845374007D274F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 463BC3F222845307007D274F /* SwiftOCR.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 373ED0AE1CC9071C00C4758B;
+			remoteInfo = SwiftOCR;
+		};
+		463BC41C2284537A007D274F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 463BC40322845327007D274F /* GPUImage.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BCE209E41943F20C002FEED8;
+			remoteInfo = GPUImageFramework;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
-		463976A52281ABE400158068 /* Embed Frameworks */ = {
+		463BC41922845374007D274F /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				463BC41622845374007D274F /* SwiftOCR.framework in Embed Frameworks */,
+				463BC41B2284537A007D274F /* GPUImage.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -97,6 +162,8 @@
 		463BC3492281CACA007D274F /* Protobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Protobuf.framework; path = OcrScanner/Frameworks/Protobuf.framework; sourceTree = "<group>"; };
 		463BC34A2281CACA007D274F /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAnalytics.framework; path = OcrScanner/Frameworks/FirebaseAnalytics.framework; sourceTree = "<group>"; };
 		463BC34B2281CACA007D274F /* TextDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TextDetector.framework; path = OcrScanner/Frameworks/TextDetector.framework; sourceTree = "<group>"; };
+		463BC3F222845307007D274F /* SwiftOCR.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftOCR.xcodeproj; path = OcrScanner/SwiftOCR/SwiftOCR.xcodeproj; sourceTree = "<group>"; };
+		463BC40322845327007D274F /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = "OcrScanner/SwiftOCR/SwiftOCR/GPUImage-master/framework/GPUImage.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +177,7 @@
 				463BC32F2281B305007D274F /* AVFoundation.framework in Frameworks */,
 				463BC3582281CACB007D274F /* FirebaseInstanceID.framework in Frameworks */,
 				463BC3552281CACB007D274F /* GTMSessionFetcher.framework in Frameworks */,
+				463BC41A2284537A007D274F /* GPUImage.framework in Frameworks */,
 				463BC3572281CACB007D274F /* FirebaseMLCommon.framework in Frameworks */,
 				463BC3532281CACB007D274F /* nanopb.framework in Frameworks */,
 				463BC3542281CACB007D274F /* GoogleUtilities.framework in Frameworks */,
@@ -123,6 +191,7 @@
 				463BC3562281CACB007D274F /* FirebaseMLVision.framework in Frameworks */,
 				463BC34C2281CACB007D274F /* FirebaseCoreDiagnostics.framework in Frameworks */,
 				463BC3502281CACB007D274F /* GoogleAPIClientForREST.framework in Frameworks */,
+				463BC41522845374007D274F /* SwiftOCR.framework in Frameworks */,
 				463BC3302281B308007D274F /* libc++.tbd in Frameworks */,
 				463BC35C2281CACB007D274F /* TextDetector.framework in Frameworks */,
 				463BC3512281CACB007D274F /* FirebaseCore.framework in Frameworks */,
@@ -140,6 +209,8 @@
 		4639760122819D6100158068 = {
 			isa = PBXGroup;
 			children = (
+				463BC3F222845307007D274F /* SwiftOCR.xcodeproj */,
+				463BC40322845327007D274F /* GPUImage.xcodeproj */,
 				463976832281A7BE00158068 /* OcrScanner */,
 				4639760C22819D6100158068 /* Products */,
 				4639763322819F1A00158068 /* Frameworks */,
@@ -214,6 +285,26 @@
 			path = OcrScanner;
 			sourceTree = "<group>";
 		};
+		463BC3F322845307007D274F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				463BC3FC22845308007D274F /* SwiftOCR.framework */,
+				463BC3FE22845308007D274F /* SwiftOCRTests.xctest */,
+				463BC40022845308007D274F /* SwiftOCR.framework */,
+				463BC40222845308007D274F /* SwiftOCR MacTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		463BC40422845327007D274F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				463BC40A22845327007D274F /* libGPUImage.a */,
+				463BC40C22845327007D274F /* GPUImage.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -224,11 +315,13 @@
 				4639767E2281A7BE00158068 /* Sources */,
 				4639767F2281A7BE00158068 /* Frameworks */,
 				463976802281A7BE00158068 /* Resources */,
-				463976A52281ABE400158068 /* Embed Frameworks */,
+				463BC41922845374007D274F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				463BC41822845374007D274F /* PBXTargetDependency */,
+				463BC41D2284537A007D274F /* PBXTargetDependency */,
 			);
 			name = OcrScanner;
 			productName = OcrScannerExample;
@@ -261,12 +354,67 @@
 			mainGroup = 4639760122819D6100158068;
 			productRefGroup = 4639760C22819D6100158068 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 463BC40422845327007D274F /* Products */;
+					ProjectRef = 463BC40322845327007D274F /* GPUImage.xcodeproj */;
+				},
+				{
+					ProductGroup = 463BC3F322845307007D274F /* Products */;
+					ProjectRef = 463BC3F222845307007D274F /* SwiftOCR.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				463976812281A7BE00158068 /* OcrScanner */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		463BC3FC22845308007D274F /* SwiftOCR.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SwiftOCR.framework;
+			remoteRef = 463BC3FB22845308007D274F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		463BC3FE22845308007D274F /* SwiftOCRTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = SwiftOCRTests.xctest;
+			remoteRef = 463BC3FD22845308007D274F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		463BC40022845308007D274F /* SwiftOCR.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SwiftOCR.framework;
+			remoteRef = 463BC3FF22845308007D274F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		463BC40222845308007D274F /* SwiftOCR MacTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "SwiftOCR MacTests.xctest";
+			remoteRef = 463BC40122845308007D274F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		463BC40A22845327007D274F /* libGPUImage.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libGPUImage.a;
+			remoteRef = 463BC40922845327007D274F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		463BC40C22845327007D274F /* GPUImage.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GPUImage.framework;
+			remoteRef = 463BC40B22845327007D274F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		463976802281A7BE00158068 /* Resources */ = {
@@ -295,6 +443,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		463BC41822845374007D274F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SwiftOCR;
+			targetProxy = 463BC41722845374007D274F /* PBXContainerItemProxy */;
+		};
+		463BC41D2284537A007D274F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GPUImageFramework;
+			targetProxy = 463BC41C2284537A007D274F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		463976882281A7BE00158068 /* Main.storyboard */ = {
@@ -441,6 +602,7 @@
 		463976922281A7BF00158068 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S8TY89ZL5Q;
@@ -467,6 +629,7 @@
 		463976932281A7BF00158068 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S8TY89ZL5Q;

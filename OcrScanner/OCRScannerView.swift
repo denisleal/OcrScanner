@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import FirebaseMLVision
+import SwiftOCR
 
 public protocol OCRScannerViewDelegate: class {
     func didRecognizeOcrNumber(_ ocrNumber: String)
@@ -122,41 +123,57 @@ public class OCRScannerView: UIView {
 
     // MARK: - Private
 
-    private func recognizeTextOnDevice(in image: VisionImage, width: CGFloat, height: CGFloat) {
+    private func recognizeTextOnDeviceWithFirebase(in image: UIImage) {
+        let visionImage = VisionImage(image: image)
+        let metadata = VisionImageMetadata()
+        metadata.orientation = .rightTop
+        visionImage.metadata = metadata
         let textRecognizer = vision.onDeviceTextRecognizer()
-        textRecognizer.process(image) { text, error in
+        textRecognizer.process(visionImage) { text, error in
             guard error == nil, let text = text else {
                 return
             }
             for block in text.blocks {
 //                print(block.text)
-                let result = self.checkStringForOCR(string: block.text)
+                self.analyzeRecognizedText(block.text)
+            }
+        }
+    }
 
-                DispatchQueue.main.async {
-                    switch result.type {
-                    case .reference where result.isValid:
-                        print("\n============================")
-                        print("Found OCR Number: \(result.value)")
-                        print("============================\n")
-                        self.delegate?.didRecognizeOcrNumber(result.value)
+    private func recognizeTextWithSwiftOCR(in image: UIImage) {
+        let swiftOCR = SwiftOCR()
+        swiftOCR.recognize(image) { (text) in
+            print(text)
+            self.analyzeRecognizedText(text)
+        }
+    }
 
-                    case .amount:
-                        print("\n============================")
-                        print("Found Amount: \(result.amount)")
-                        print("============================\n")
-                        self.delegate?.didRecognizeAmount(result.amount)
+    private func analyzeRecognizedText(_ text: String) {
+        let result = self.checkStringForOCR(string: text)
 
-                    case .giroNr:
-                        print("\n============================")
-                        print("Found Giro Number: \(result.value)")
-                        print("============================\n")
-                        self.delegate?.didRecognizeGiroNumber(result.value)
+        DispatchQueue.main.async {
+            switch result.type {
+            case .reference where result.isValid:
+                print("\n============================")
+                print("Found OCR Number: \(result.value)")
+                print("============================\n")
+                self.delegate?.didRecognizeOcrNumber(result.value)
 
-                    default:
-                        //print(result)
-                        break
-                    }
-                }
+            case .amount:
+                print("\n============================")
+                print("Found Amount: \(result.amount)")
+                print("============================\n")
+                self.delegate?.didRecognizeAmount(result.amount)
+
+            case .giroNr:
+                print("\n============================")
+                print("Found Giro Number: \(result.value)")
+                print("============================\n")
+                self.delegate?.didRecognizeGiroNumber(result.value)
+
+            default:
+                //print(result)
+                break
             }
         }
     }
@@ -251,17 +268,12 @@ public class OCRScannerView: UIView {
 extension OCRScannerView: AVCaptureVideoDataOutputSampleBufferDelegate {
 
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer), allowFrameCapture else { return }
+        guard allowFrameCapture else { return }
         allowFrameCapture = false
         let fullImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer)
         if let image = cropToPreviewLayer(originalImage: fullImage) {
-            let visionImage = VisionImage(image: image)
-            let metadata = VisionImageMetadata()
-            metadata.orientation = .rightTop
-            visionImage.metadata = metadata
-            let imageWidth = CGFloat(CVPixelBufferGetWidth(imageBuffer))
-            let imageHeight = CGFloat(CVPixelBufferGetHeight(imageBuffer))
-            self.recognizeTextOnDevice(in: visionImage, width: imageWidth, height: imageHeight)
+//            self.recognizeTextOnDeviceWithFirebase(in: image)
+            self.recognizeTextWithSwiftOCR(in: image)
         }
     }
 
