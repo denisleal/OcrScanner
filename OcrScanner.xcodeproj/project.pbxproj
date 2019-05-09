@@ -46,6 +46,7 @@
 		463BC41622845374007D274F /* SwiftOCR.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC3FC22845308007D274F /* SwiftOCR.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		463BC41A2284537A007D274F /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC40C22845327007D274F /* GPUImage.framework */; };
 		463BC41B2284537A007D274F /* GPUImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC40C22845327007D274F /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8E80105B22848EFB00E71D89 /* OCR-Network in Resources */ = {isa = PBXBuildFile; fileRef = 8E80105A22848EFB00E71D89 /* OCR-Network */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -164,6 +165,7 @@
 		463BC34B2281CACA007D274F /* TextDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TextDetector.framework; path = OcrScanner/Frameworks/TextDetector.framework; sourceTree = "<group>"; };
 		463BC3F222845307007D274F /* SwiftOCR.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftOCR.xcodeproj; path = OcrScanner/SwiftOCR/SwiftOCR.xcodeproj; sourceTree = "<group>"; };
 		463BC40322845327007D274F /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = "OcrScanner/SwiftOCR/SwiftOCR/GPUImage-master/framework/GPUImage.xcodeproj"; sourceTree = "<group>"; };
+		8E80105A22848EFB00E71D89 /* OCR-Network */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "OCR-Network"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -273,6 +275,7 @@
 		463976832281A7BE00158068 /* OcrScanner */ = {
 			isa = PBXGroup;
 			children = (
+				8E80105A22848EFB00E71D89 /* OCR-Network */,
 				463976842281A7BE00158068 /* AppDelegate.swift */,
 				463976862281A7BE00158068 /* ViewController.swift */,
 				4639767C2281A72600158068 /* OCRScannerView.swift */,
@@ -423,6 +426,7 @@
 			files = (
 				4639768F2281A7BF00158068 /* LaunchScreen.storyboard in Resources */,
 				463BC3382281B671007D274F /* GoogleService-Info.plist in Resources */,
+				8E80105B22848EFB00E71D89 /* OCR-Network in Resources */,
 				463BC33A2281BC64007D274F /* GoogleMVTextDetectorResources.bundle in Resources */,
 				4639768C2281A7BF00158068 /* Assets.xcassets in Resources */,
 				4639768A2281A7BE00158068 /* Main.storyboard in Resources */,
