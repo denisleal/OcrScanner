@@ -124,39 +124,43 @@ public class OCRScannerView: UIView {
 
     private func recognizeTextOnDevice(in image: VisionImage, width: CGFloat, height: CGFloat) {
         let textRecognizer = vision.onDeviceTextRecognizer()
-        textRecognizer.process(image) { text, error in
-            guard error == nil, let text = text else {
+        textRecognizer.process(image) { result, error in
+            guard error == nil, let result = result else {
                 return
             }
-            for block in text.blocks {
-//                print(block.text)
-                let result = self.checkStringForOCR(string: block.text)
+            for block in result.blocks {
+                print(block.text)
+                self.analyzeRecognizedText(block.text)
+            }
+        }
+    }
 
-                DispatchQueue.main.async {
-                    switch result.type {
-                    case .reference where result.isValid:
-                        print("\n============================")
-                        print("Found OCR Number: \(result.value)")
-                        print("============================\n")
-                        self.delegate?.didRecognizeOcrNumber(result.value)
+    private func analyzeRecognizedText(_ text: String) {
+        let result = self.checkStringForOCR(string: text)
 
-                    case .amount:
-                        print("\n============================")
-                        print("Found Amount: \(result.amount)")
-                        print("============================\n")
-                        self.delegate?.didRecognizeAmount(result.amount)
+        DispatchQueue.main.async {
+            switch result.type {
+            case .reference where result.isValid:
+                print("\n============================")
+                print("Found OCR Number: \(result.value)")
+                print("============================\n")
+                self.delegate?.didRecognizeOcrNumber(result.value)
 
-                    case .giroNr:
-                        print("\n============================")
-                        print("Found Giro Number: \(result.value)")
-                        print("============================\n")
-                        self.delegate?.didRecognizeGiroNumber(result.value)
+            case .amount:
+                print("\n============================")
+                print("Found Amount: \(result.amount)")
+                print("============================\n")
+                self.delegate?.didRecognizeAmount(result.amount)
 
-                    default:
-                        //print(result)
-                        break
-                    }
-                }
+            case .giroNr:
+                print("\n============================")
+                print("Found Giro Number: \(result.value)")
+                print("============================\n")
+                self.delegate?.didRecognizeGiroNumber(result.value)
+
+            default:
+                //print(result)
+                break
             }
         }
     }
