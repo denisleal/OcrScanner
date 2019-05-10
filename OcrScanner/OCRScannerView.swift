@@ -128,62 +128,77 @@ public class OCRScannerView: UIView {
             guard error == nil, let result = result else {
                 return
             }
-            for block in result.blocks {
-                print(block.text)
-                self.analyzeRecognizedText(block.text)
-            }
+            let text = result.blocks.compactMap({ (block) -> String? in
+                return block.text
+            }).joined(separator: " ")
+//            print(text)
+            self.analyzeRecognizedText(text)
         }
     }
 
     private func analyzeRecognizedText(_ text: String) {
-        let result = self.checkStringForOCR(string: text)
+        for result in self.checkStringForOCR(string: text) {
+            DispatchQueue.main.async {
+                switch result.type {
+                case .reference where result.isValid:
+                    print("\n============================")
+                    print("Found OCR Number: \(result.value)")
+                    print("============================\n")
+                    self.delegate?.didRecognizeOcrNumber(result.value)
 
-        DispatchQueue.main.async {
-            switch result.type {
-            case .reference where result.isValid:
-                print("\n============================")
-                print("Found OCR Number: \(result.value)")
-                print("============================\n")
-                self.delegate?.didRecognizeOcrNumber(result.value)
+                case .amount where result.isValid:
+                    print("\n============================")
+                    print("Found Amount: \(result.amount)")
+                    print("============================\n")
+                    self.delegate?.didRecognizeAmount(result.amount)
 
-            case .amount:
-                print("\n============================")
-                print("Found Amount: \(result.amount)")
-                print("============================\n")
-                self.delegate?.didRecognizeAmount(result.amount)
+                case .giroNr:
+                    print("\n============================")
+                    print("Found Giro Number: \(result.value)")
+                    print("============================\n")
+                    self.delegate?.didRecognizeGiroNumber(result.value)
 
-            case .giroNr:
-                print("\n============================")
-                print("Found Giro Number: \(result.value)")
-                print("============================\n")
-                self.delegate?.didRecognizeGiroNumber(result.value)
-
-            default:
-                //print(result)
-                break
+                default:
+                    //print(result)
+                    break
+                }
             }
         }
     }
 
     //swiftlint:disable large_tuple
-    private func checkStringForOCR(string: String) -> OCRResult {
+    private func checkStringForOCR(string: String) -> [OCRResult] {
         let giroPattern = "[0-9]{2,8}#[0-9]{2}#"
-        let amountPattern = "[0-9]{0,7}\\s[0-9]{2}"
+        let amountPattern = "[0-9]{0,7}\\s[0-9]{1,2}\\s[0-9]{1}"
         let ocrNrPattern = "[0-9]{3,25}\\s#"
 
-        let predicateGiro = NSPredicate(format: "SELF MATCHES %@", giroPattern)
-        let predicateAmount = NSPredicate(format: "SELF MATCHES %@", amountPattern)
-        let predicateOCRNr = NSPredicate(format: "SELF MATCHES %@", ocrNrPattern)
+        var results: [OCRResult] = []
 
-        if predicateOCRNr.evaluate(with: string) {
-            return OCRResult(type: .reference, value: formatOCRNumber(string), amount: 0, isValid: checkValidOCRNr(string: string, controlLength: false))
-        } else if predicateAmount.evaluate(with: string) {
-            return OCRResult(type: .amount, value: string, amount: formatAmount(string), isValid: true)
-        } else if predicateGiro.evaluate(with: string) {
-            return OCRResult(type: .giroNr, value: formatGiroNumber(string), amount: 0, isValid: true)
-        } else {
-            return OCRResult(type: .undefined, value: string, amount: 0, isValid: true)
+        if !string.matches(for: ocrNrPattern).isEmpty {
+//            print(string)
+            let ocrText = string.matches(for: ocrNrPattern).first ?? ""
+            results.append(OCRResult(type: .reference,
+                                     value: formatOCRNumber(ocrText),
+                                     amount: 0,
+                                     isValid: checkValid10Modulus(string: ocrText, controlLength: false)))
         }
+
+        if !string.matches(for: amountPattern).isEmpty {
+//            print(string)
+            let amountText = string.matches(for: amountPattern).first ?? ""
+            results.append(OCRResult(type: .amount,
+                                     value: string,
+                                     amount: formatAmount(amountText),
+                                     isValid: checkValid10Modulus(string: amountText.replacingOccurrences(of: " ", with: ""), controlLength: false)))
+        }
+
+        if !string.matches(for: giroPattern).isEmpty {
+//            print(string)
+            let giroText = string.matches(for: giroPattern).first ?? ""
+            results.append(OCRResult(type: .giroNr, value: formatGiroNumber(giroText), amount: 0, isValid: true))
+        }
+
+        return results
     }
 
     private func formatOCRNumber(_ ocrText: String) -> String {
@@ -192,7 +207,8 @@ public class OCRScannerView: UIView {
     }
 
     private func formatAmount(_ amountText: String) -> Double {
-        let amountText = amountText.replacingOccurrences(of: " ", with: ",")
+        let parts = amountText.split(separator: " ")
+        let amountText = String(parts[0] + "," + parts[1])
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = ","
@@ -210,7 +226,7 @@ public class OCRScannerView: UIView {
     ///   - string: String containing OCR-number
     ///   - controlLength: If string lenght should also be valid according to OCR standard
     /// - Returns: Bool saying if the OCR is valid or not
-    private func checkValidOCRNr(string: String, controlLength: Bool) -> Bool {
+    private func checkValid10Modulus(string: String, controlLength: Bool) -> Bool {
 
         var total = 0
         var multiplyByOne = false
@@ -296,5 +312,21 @@ extension OCRScannerView: AVCaptureVideoDataOutputSampleBufferDelegate {
             return UIImage(cgImage: croppedCGImage, scale: originalImage.scale, orientation: originalImage.imageOrientation)
         }
         return nil
+    }
+}
+
+extension String {
+    func matches(for regex: String) -> [String] {
+        do {
+            let regex = try NSRegularExpression(pattern: regex)
+            let results = regex.matches(in: self,
+                                        range: NSRange(self.startIndex..., in: self))
+            return results.map {
+                String(self[Range($0.range, in: self)!])
+            }
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
+        }
     }
 }
