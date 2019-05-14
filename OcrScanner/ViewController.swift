@@ -40,6 +40,7 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: OCRScannerViewDelegate {
+
     func didRecognizeOcrNumber(_ ocrNumber: String) {
         self.ocrLabel.text = ocrNumber
     }
@@ -50,5 +51,11 @@ extension ViewController: OCRScannerViewDelegate {
 
     func didRecognizeAmount(_ amount: Double) {
         self.sumLbl.text = amount.description
+    }
+
+    func didRecognizeQRCode(ocrNumber: String, amount: Double, giroNumber: String) {
+        self.ocrLabel.text = ocrNumber
+        self.sumLbl.text = amount.description
+        self.giroLbl.text = giroNumber
     }
 }

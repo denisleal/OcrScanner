@@ -14,6 +14,7 @@ public protocol OCRScannerViewDelegate: class {
     func didRecognizeOcrNumber(_ ocrNumber: String)
     func didRecognizeGiroNumber(_ giroNumber: String)
     func didRecognizeAmount(_ amount: Double)
+    func didRecognizeQRCode(ocrNumber: String, amount: Double, giroNumber: String)
 }
 
 public class OCRScannerView: UIView {
@@ -98,6 +99,13 @@ public class OCRScannerView: UIView {
 
             if session.canAddOutput(videoDataOutput) {
                 session.addOutput(videoDataOutput)
+            }
+
+            let metadataOutput = AVCaptureMetadataOutput()
+            if session.canAddOutput(metadataOutput) {
+                session.addOutput(metadataOutput)
+                metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+                metadataOutput.metadataObjectTypes = [.qr]
             }
 
             layer.masksToBounds = true
@@ -315,18 +323,32 @@ extension OCRScannerView: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
 }
 
-extension String {
-    func matches(for regex: String) -> [String] {
+extension OCRScannerView: AVCaptureMetadataOutputObjectsDelegate {
+
+    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        guard let metadataObject = metadataObjects.first,
+            let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,
+            let string = readableObject.stringValue?.replacingOccurrences(of: "'", with: "\""),
+            let jsonData = string.data(using: .utf8) else { return }
         do {
-            let regex = try NSRegularExpression(pattern: regex)
-            let results = regex.matches(in: self,
-                                        range: NSRange(self.startIndex..., in: self))
-            return results.map {
-                String(self[Range($0.range, in: self)!])
-            }
-        } catch let error {
-            print("invalid regex: \(error.localizedDescription)")
-            return []
+            let qrCodeContent = try JSONDecoder().decode(QRCodeContent.self, from: jsonData)
+            delegate?.didRecognizeQRCode(ocrNumber: qrCodeContent.ocrNumber,
+                                         amount: qrCodeContent.amount,
+                                         giroNumber: qrCodeContent.giroNumber)
+        } catch {
+            print("Error when decoding QR Code. \(error)")
         }
+    }
+}
+
+struct QRCodeContent: Decodable {
+    let giroNumber: String
+    let ocrNumber: String
+    let amount: Double
+
+    enum CodingKeys: String, CodingKey {
+        case giroNumber = "acc"
+        case ocrNumber = "iref"
+        case amount = "due"
     }
 }

@@ -42,6 +42,7 @@
 		463BC35A2281CACB007D274F /* Protobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC3492281CACA007D274F /* Protobuf.framework */; };
 		463BC35B2281CACB007D274F /* FirebaseAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC34A2281CACA007D274F /* FirebaseAnalytics.framework */; };
 		463BC35C2281CACB007D274F /* TextDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 463BC34B2281CACA007D274F /* TextDetector.framework */; };
+		8E801070228B21C800E71D89 /* String+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E80106F228B21C800E71D89 /* String+extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -97,6 +98,7 @@
 		463BC3492281CACA007D274F /* Protobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Protobuf.framework; path = OcrScanner/Frameworks/Protobuf.framework; sourceTree = "<group>"; };
 		463BC34A2281CACA007D274F /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAnalytics.framework; path = OcrScanner/Frameworks/FirebaseAnalytics.framework; sourceTree = "<group>"; };
 		463BC34B2281CACA007D274F /* TextDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TextDetector.framework; path = OcrScanner/Frameworks/TextDetector.framework; sourceTree = "<group>"; };
+		8E80106F228B21C800E71D89 /* String+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +207,7 @@
 				463976842281A7BE00158068 /* AppDelegate.swift */,
 				463976862281A7BE00158068 /* ViewController.swift */,
 				4639767C2281A72600158068 /* OCRScannerView.swift */,
+				8E80106F228B21C800E71D89 /* String+extensions.swift */,
 				463976882281A7BE00158068 /* Main.storyboard */,
 				4639762D22819E5E00158068 /* Firebase */,
 				4639768B2281A7BF00158068 /* Assets.xcassets */,
@@ -288,6 +291,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E801070228B21C800E71D89 /* String+extensions.swift in Sources */,
 				463BC32A2281B190007D274F /* OCRScannerView.swift in Sources */,
 				463976872281A7BE00158068 /* ViewController.swift in Sources */,
 				463976852281A7BE00158068 /* AppDelegate.swift in Sources */,
