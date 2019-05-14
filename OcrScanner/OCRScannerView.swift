@@ -170,7 +170,7 @@ public class OCRScannerView: UIView {
     private func checkStringForOCR(string: String) -> [OCRResult] {
         let giroPattern = "[0-9]{2,8}#[0-9]{2}#"
         let amountPattern = "[0-9]{0,7}\\s[0-9]{1,2}\\s[0-9]{1}"
-        let ocrNrPattern = "[0-9]{3,25}\\s#"
+        let ocrNrPattern = "[0-9]{3,25}\\s#(\\s|$)"
 
         var results: [OCRResult] = []
 
