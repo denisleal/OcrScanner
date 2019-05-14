@@ -169,7 +169,7 @@ public class OCRScannerView: UIView {
     //swiftlint:disable large_tuple
     private func checkStringForOCR(string: String) -> [OCRResult] {
         let giroPattern = "[0-9]{2,8}#[0-9]{2}#"
-        let amountPattern = "[0-9]{0,7}\\s[0-9]{1,2}\\s[0-9]{1}"
+        let amountPattern = "(^|\\s)[0-9]{0,7}\\s[0-9]{1,2}\\s[0-9]{1}(\\s|$)"
         let ocrNrPattern = "[0-9]{3,25}\\s#(\\s|$)"
 
         var results: [OCRResult] = []
